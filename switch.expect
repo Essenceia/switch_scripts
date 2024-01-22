@@ -1,0 +1,25 @@
+#!/usr/bin/expect
+set timeout 20
+set hostName [lindex $argv 0]
+set pwm [lindex $argv 1]
+set userName [lindex $argv 2]
+set password [lindex $argv 3]
+
+spawn telnet $hostName
+expect "Trying $hostName..."
+expect "Connected to $hostName."
+expect "Escape character is '^]'."
+expect ""
+expect "User:"
+send "$userName\r"
+expect "Password:"
+send "$password\r";
+send "enable\r"
+send "linuxsh\r"
+expect "#"
+send "echo $pwm > /sys/class/thermal/manual_pwm\r"
+send "exit\r"
+expect "Connection closed by foreign host."
+send "quit\r"
+send "quit\r"
+interact
